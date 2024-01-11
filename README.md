@@ -15,3 +15,8 @@ Implement the following features:
     - Score System ( Kill zombie and get score )
     - ( Bonus ) Skill System
     
+Collect the following resources:
+    - Zombie model
+    - Zombie sound
+    - effect ( sound and visual )
+
