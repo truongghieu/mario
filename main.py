@@ -46,6 +46,8 @@ class Game:
             pygame.display.update()
             self.clock.tick(60)
 
+            print("Hello world")
+
 myGame = Game()
 
 myGame.run()
