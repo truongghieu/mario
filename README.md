@@ -1,22 +1,27 @@
 # ZombieKiller
 
 ## Done
-- [x] ZombieKiller
-- [x] ZombieKiller
-- [x] ZombieKiller
+- [x] `ZombieKiller`
+- [x] `ZombieKiller`
+- [x] `ZombieKiller`
 
-Create a base format for the project. 
-![img](/img_show/0.png)
+Add the auto random appear zombie and timer.
+<div>
+    <img src="/img_show/1.png" align="center">
+</div><br>
 
 ## TODO
 Implement the following features:
-- Input system ( Mouse click )
-- Zombie ( Auto appear and timer) 
-- Score System ( Kill zombie and get score )
-- ( Bonus ) Skill System
+- [tick] Mouse collider ( Click to kill zombie )
+- [tick] Zombie ( Auto appear and timer) 
+- [x] Game Manager ( Game start , score , game over )
+- [x] Canvas System ( Kill zombie and get score )
+- [x] Sound System ( Play sound when kill zombie )
+- [x] ( Bonus ) Skill System
+
     
 Collect the following resources:
-- Zombie model
+- Zombie model 
 - Zombie sound
 - effect ( sound and visual )
 
