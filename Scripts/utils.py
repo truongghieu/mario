@@ -34,5 +34,21 @@ class Animation:
             if self.frame >= self.img_duration * len(self.images) - 1:
                 self.done = True
     
-    def img(self):
+    def img(self,index = None):
+        if index != None:
+            return self.images[index]
         return self.images[int(self.frame / self.img_duration)]
+
+    def reset(self):
+        self.frame = 0
+        self.done = False
+
+def mouse_rect_collision(mouse_pos):
+    pygame.rect.Rect(mouse_pos[0],mouse_pos[1],1,1)
+
+def timer(current_time, time):
+    current_time -= 1
+    if current_time <= 0:
+        current_time = time
+        return True
+    return False
