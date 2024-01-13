@@ -13,7 +13,7 @@ Add the auto random appear zombie and timer.
 </div><br>
 
 <div>
-    ![video](/img_show/v1.mp4)
+    [![Watch the video](/img_show/v1.mp4)]
   
 </div><br>
 
