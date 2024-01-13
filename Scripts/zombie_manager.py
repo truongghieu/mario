@@ -1,22 +1,26 @@
 import random 
 class zombie_manager:
-    def __init__ (self,zombie,zombie_count=2,zombie_spawn_time=200):
+    def __init__ (self,zombie,zombie_count=2,zombie_spawn_time=200,enable=True):
         self.zombie = zombie
         self.spawn_positions =[[45,40],[125,40],[205,40],[75,90], [175,90],[45,140],[125,140],[205,140]]
         self.zombies = []
         self.zombie_count = zombie_count
         self.zombie_spawn_time = zombie_spawn_time
         self.current_time = zombie_spawn_time
+        self.enable = enable
         for spawn in self.spawn_positions:
             self.zombies.append(self.zombie.copy())
             self.zombies[-1].position = spawn
-            print(self.zombies[-1].position)
-        
+            self.zombies[-1].enable = False        
     def update(self):
-        if self.timer():
-            self.enable_random()
-        for zombie in self.zombies:
-            zombie.update()
+        if self.enable:
+            if self.timer():
+                self.enable_random()
+            for zombie in self.zombies:
+                zombie.update()
+        else:
+            for zombie in self.zombies:
+                zombie.enable = False
 
 
 

@@ -12,8 +12,8 @@ Add the auto random appear zombie and timer.
 
 ## TODO
 Implement the following features:
-- [tick] Mouse collider ( Click to kill zombie )
-- [tick] Zombie ( Auto appear and timer) 
+- [x] Mouse collider ( Click to kill zombie )
+- [x] Zombie ( Auto appear and timer) 
 - [x] Game Manager ( Game start , score , game over )
 - [x] Canvas System ( Kill zombie and get score )
 - [x] Sound System ( Play sound when kill zombie )
