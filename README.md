@@ -13,7 +13,8 @@ Add the auto random appear zombie and timer.
 </div><br>
 
 https://github.com/truongghieu/ZombieKiller/assets/89084037/4d65e571-8117-444c-9fe7-3fbad166fa15
-test
+
+
 
 ### TODO
 
