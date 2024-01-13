@@ -11,11 +11,9 @@ Add the auto random appear zombie and timer.
 <div>
     <img src="/img_show/1.png" align="center">
 </div><br>
-<div>
-<video src="img_show/v1.mp4" controls title="Title"></video>
-</div><br>
 
-[![Video Label](img_show/v1.mp4)](https://youtu.be/vt5fpE0bzSY)
+https://github.com/truongghieu/ZombieKiller/assets/89084037/4d65e571-8117-444c-9fe7-3fbad166fa15
+
 
 ### TODO
 
