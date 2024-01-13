@@ -13,8 +13,8 @@ Add the auto random appear zombie and timer.
 </div><br>
 
 <div>
-    <video src="/img_show/v1.mp4" align="center" controls="controls" >
-    </video>
+    ![video](/img_show/v1.mp4)
+  
 </div><br>
 
 ### TODO
