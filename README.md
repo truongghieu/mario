@@ -15,6 +15,7 @@ Add the auto random appear zombie and timer.
 <video src="img_show/v1.mp4" controls title="Title"></video>
 </div><br>
 
+[![Video Label](img_show/v1.mp4)](https://youtu.be/vt5fpE0bzSY)
 
 ### TODO
 
