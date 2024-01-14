@@ -22,6 +22,8 @@ class zombie(object):
     def update(self):
         if self.enable:
             self.image.update()
+        else:
+            self.image.reset()
         if self.image.done:
             self.image.reset()
             self.enable = False

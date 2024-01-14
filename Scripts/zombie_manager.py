@@ -21,6 +21,7 @@ class zombie_manager:
         else:
             for zombie in self.zombies:
                 zombie.enable = False
+                
 
 
 
