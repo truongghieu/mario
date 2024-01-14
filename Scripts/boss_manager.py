@@ -7,7 +7,8 @@ class boss_manager:
     def render(self,display,offset=(0,0)):
         if self.enable:
             for boss in self.bosses:
-                boss.render(display,offset)
+                if boss.enable:
+                    boss.render(display,offset)
     def update(self):
         if self.enable:
             for boss in self.bosses:
