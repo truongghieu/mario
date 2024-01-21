@@ -1,5 +1,5 @@
 # ZombieKiller
-
+![logo_github](https://github.com/truongghieu/ZombieKiller/assets/89084037/14884879-9b6e-4228-a559-b6df04fb3c15)
 ## Done
 - [x] `ZombieKiller`
 - [x] `ZombieKiller`
@@ -8,11 +8,13 @@
 
 
 Add the auto random appear zombie and timer.
-<div>
-    <img src="/img_show/1.png" align="center">
-</div><br>
+<br>
 
 https://github.com/truongghieu/ZombieKiller/assets/89084037/4d65e571-8117-444c-9fe7-3fbad166fa15
+
+
+
+Uploading video_1.mp4…
 
 
 
