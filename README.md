@@ -1,5 +1,7 @@
 # ZombieKiller
-![logo_github](https://github.com/truongghieu/ZombieKiller/assets/89084037/14884879-9b6e-4228-a559-b6df04fb3c15)
+[![madewithlove](https://img.shields.io/badge/made_with-%E2%9D%A4-red?style=for-the-badge&labelColor=orange
+)](https://github.com/truongghieu/ZombieKiller)
+
 ## Done
 - [x] `ZombieKiller`
 - [x] `ZombieKiller`
