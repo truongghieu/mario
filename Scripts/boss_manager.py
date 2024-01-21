@@ -2,6 +2,8 @@ class boss_manager:
     def __init__ (self,enable=True):
         
         self.bosses = []
+        self.boss_active = 0
+        self.boss_timer_active = []
         self.enable = enable
 
     def render(self,display,offset=(0,0)):
@@ -26,5 +28,5 @@ class boss_manager:
         for boss in self.bosses:
             boss.enable = False
             boss.health = 100
-            boss.position = boss.defaut_pos
+            # boss.position = boss.defaut_pos
             boss.image.reset()
