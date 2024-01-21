@@ -78,6 +78,7 @@ class boss(object):
         self.enable = enable
         self.spawn_time = image.img_duration * len(self.image.images)
         self.current_time = self.spawn_time
+    
     def update(self):
         if self.enable:
             self.image.update()

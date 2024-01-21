@@ -17,6 +17,7 @@ class button(object):
         if pygame.Rect(self.position[0],self.position[1],self.image.get_width(),self.image.get_height()).collidepoint(mouse_point):
             for listener in self.listeners:
                 listener()
+        return pygame.Rect(self.position[0],self.position[1],self.image.get_width(),self.image.get_height()).collidepoint(mouse_point)
 
     def button_add_listener(self,listener):
         self.listeners.append(listener)
