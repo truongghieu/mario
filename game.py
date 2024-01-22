@@ -16,7 +16,7 @@ from scripts.zombie_manager import zombie_manager
 from scripts.boss_manager import boss_manager
 from scripts.boss.greenskin import greenskin
 from scripts.button import button
-
+from scripts.effect import effect
 
 
 font_dat = {'A':[3],'B':[3],'C':[3],'D':[3],'E':[3],'F':[3],'G':[3],'H':[3],'I':[3],'J':[3],'K':[3],'L':[3],'M':[5],'N':[3],'O':[3],'P':[3],'Q':[3],'R':[3],'S':[3],'T':[3],'U':[3],'V':[3],'W':[5],'X':[3],'Y':[3],'Z':[3],
@@ -38,7 +38,7 @@ class Game:
         # Variables
         # music 
         pygame.mixer.music.load('data/main.wav')
-        self.hit_clip = load_snd('hit')
+        self.hit_clip = load_snd('explosion')
         # ---------------
         self.last_mouse_pos = [0, 0]
         self.timer = 0
@@ -55,6 +55,7 @@ class Game:
             'hammer': Animation(load_images('hammer'), 5, False),
             'boss_0' : Animation(load_images('entities/boss_0'),30,True),
             'boss_1' : Animation(load_images('entities/boss_1'),30,True),
+            'hit_effect' : Animation(load_images('particles/boom'),3,False)
         }
 
         self.game_state = game_state.menu
@@ -78,6 +79,9 @@ class Game:
             self.cells.append(object(self.assets['cell'], spawn))
         self.my_hammer = hammer(self.assets['hammer'], (50, 50))
         self.my_hammer.dame = 1
+        self.hit_effect = effect(self.assets['hit_effect'], (0, 0),False)
+        self.hit_effect.enable = False
+
     def gameplay(self):
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.5)
@@ -97,7 +101,7 @@ class Game:
                 self.boss_manaer_s.wake_up_boss(self.boss_manaer_s.boss_active)
             # print(self.zombie_manager_s.enable)
             if self.boss_manaer_s.bosses[self.boss_manaer_s.boss_active].enable == False and self.boss_manaer_s.enable == True:
-                print("reset")
+                # print("reset")
                 self.boss_manaer_s.enable = False
                 self.zombie_manager_s.enable = True
                 # self.timer = 0
@@ -142,7 +146,8 @@ class Game:
             else:
                 self.my_hammer.render(self.display, offset=[-20,20])
                 self.my_hammer.update()
-            
+            self.hit_effect.render(self.display, offset=[0,35])
+            self.hit_effect.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -162,8 +167,10 @@ class Game:
                             if t_boss.check_mouse_collision(self.last_mouse_pos):
                                 self.my_hammer.position = t_boss.position
                                 self.my_hammer.enable = True
+                                self.hit_effect.position = t_boss.position
+                                self.hit_effect.enable = True
                                 t_boss.take_damage(self.my_hammer.dame)
-                                print(t_boss.health)
+                                # print(t_boss.health)
                                 self.scrore += self.my_hammer.dame
                                 self.hit_clip.play()
                                 hitted = True
@@ -175,6 +182,8 @@ class Game:
                                 # print(zombie.position)
                                 self.my_hammer.position = zombie.position
                                 self.my_hammer.enable = True
+                                self.hit_effect.position = zombie.position
+                                self.hit_effect.enable = True
                                 zombie.enable = False
                                 # print("collision")
                                 self.scrore += 2
