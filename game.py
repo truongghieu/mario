@@ -7,14 +7,16 @@ import random
 from scripts.system.utils import load_image, load_images,Animation
 from scripts.system.entities import object,zombie,hammer
 from scripts.system.text import generate_font,show_text
-from scripts.system.sound import load_snd
+from scripts.system.sound import load_snd,load_kill
 from scripts.system.enum import game_state
 
 # Object
+from scripts.base import base
 from scripts.clouds import Clouds
 from scripts.zombie_manager import zombie_manager
 from scripts.boss_manager import boss_manager
 from scripts.boss.greenskin import greenskin
+from scripts.card import card
 from scripts.button import button
 from scripts.effect import effect
 
@@ -43,9 +45,14 @@ class Game:
         self.last_mouse_pos = [0, 0]
         self.timer = 0
         self.scrore = 0
+        self.kill_clip = []
+        self.time_effect_active_boss = 0 
+        for i in range(2,19):
+            self.kill_clip.append(load_kill(str(i)))
         self.assets = {
             'logo': load_image('logo.png'),
             'background': load_image('background.png'),
+            'filter' : load_image('filter.png'),
             'start_button': load_image('button/start.png'),
             'gameplay_base' :load_image('base.png'),
             'cell': load_image('cells/cell_2.png'),
@@ -55,9 +62,13 @@ class Game:
             'hammer': Animation(load_images('hammer'), 5, False),
             'boss_0' : Animation(load_images('entities/boss_0'),30,True),
             'boss_1' : Animation(load_images('entities/boss_1'),30,True),
-            'hit_effect' : Animation(load_images('particles/boom'),3,False)
+            'hit_effect' : Animation(load_images('particles/boom'),3,False),
+            # Card
+            'card_health' : load_image('cards/card_health.png')
         }
-
+        self.assets['filter'].set_alpha(30)
+        self.card_health = card(self.assets['card_health'],(100,250))
+        self.card_health.velocity = 10
         self.game_state = game_state.menu
         self.game_logo = object(self.assets['logo'], (self.display.get_size()[0] / 2 - self.assets['logo'].get_width() / 2, 50))
         self.start_button = button(self.assets['start_button'], (self.display.get_size()[0] / 2 - self.assets['start_button'].get_width() / 2, 120), True)
@@ -72,8 +83,9 @@ class Game:
         # Decorations
         self.clouds = Clouds(self.assets['clouds'], count=16)
         self.scroll = [0, 0]
-        self.base = object(self.assets['gameplay_base'], (35, 30))
+        self.base = base(self.assets['gameplay_base'], (35, 30))
         self.score_window = object(self.assets['score_window'], (0, 0))
+        self.filter = object(self.assets['filter'], (0, 0))
         self.cells = []
         for spawn in self.zombie_manager_s.spawn_positions:
             self.cells.append(object(self.assets['cell'], spawn))
@@ -81,11 +93,11 @@ class Game:
         self.my_hammer.dame = 1
         self.hit_effect = effect(self.assets['hit_effect'], (0, 0),False)
         self.hit_effect.enable = False
-
+   
     def gameplay(self):
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.5)
-        self.hit_clip.set_volume(0.5)
+        pygame.mixer.music.set_volume(0.3)
+        self.hit_clip.set_volume(0.1)
 
         # self.boss_manaer_s.enable = True
         # self.boss_manaer_s.wake_up_boss(0)
@@ -96,14 +108,31 @@ class Game:
                 self.menu()
                 break
             self.timer += 1
+            # effect to active boss
+            # print(self.time_effect_active_boss)
+            
+            
+            if self.boss_manaer_s.boss_timer_active[self.boss_manaer_s.boss_active] - 400 <= self.timer <= self.boss_manaer_s.boss_timer_active[self.boss_manaer_s.boss_active] -10:
+                self.filter.image.set_alpha(self.time_effect_active_boss)
+                if self.timer % 2 == 0:
+                    self.time_effect_active_boss += 1
+                self.time_effect_active_boss = min(self.time_effect_active_boss,200)
             if self.boss_manaer_s.boss_timer_active[self.boss_manaer_s.boss_active] == self.timer:
                 self.boss_manaer_s.enable = True
                 self.boss_manaer_s.wake_up_boss(self.boss_manaer_s.boss_active)
             # print(self.zombie_manager_s.enable)
             if self.boss_manaer_s.bosses[self.boss_manaer_s.boss_active].enable == False and self.boss_manaer_s.enable == True:
-                # print("reset")
+                # Card
+                self.card_health.enable = True
+                if(self.card_health.enable):
+                    self.card_health.fly_to((self.display.get_size()[0] / 2 - self.assets['card_health'].get_width() / 2, 50))
+
+                self.kill_clip[len(self.kill_clip)-1].play()
+                # Setup
                 self.boss_manaer_s.enable = False
                 self.zombie_manager_s.enable = True
+                self.time_effect_active_boss = 30
+                self.filter.image.set_alpha(self.time_effect_active_boss)
                 # self.timer = 0
                 self.boss_manaer_s.reset()
                 if self.boss_manaer_s.boss_active < len(self.boss_manaer_s.bosses)-1:
@@ -111,8 +140,8 @@ class Game:
                 else:
                     self.boss_manaer_s.boss_active = len(self.boss_manaer_s.bosses)-1
             if(self.boss_manaer_s.enable):
-                if self.timer % 10 == 0:
-                    self.scrore -= 1
+                if self.timer % 5 == 0:
+                    self.scrore -= self.boss_manaer_s.boss_active + 1
                 
             self.display.blit(self.assets['background'], (0, 0))
 
@@ -134,7 +163,12 @@ class Game:
 
             self.zombie_manager_s.update()
             self.zombie_manager_s.render(self.display,offset=render_scroll)  
-
+            self.card_health.update()
+            self.card_health.render(self.display, offset=[0,0])
+            self.hit_effect.render(self.display, offset=[0,35])
+            self.hit_effect.update()
+            self.filter.update()
+            self.filter.render(self.display, offset=render_scroll)
             if self.boss_manaer_s.enable:
                 self.zombie_manager_s.enable = False
                 
@@ -146,20 +180,30 @@ class Game:
             else:
                 self.my_hammer.render(self.display, offset=[-20,20])
                 self.my_hammer.update()
-            self.hit_effect.render(self.display, offset=[0,35])
-            self.hit_effect.update()
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                # get mouse position
+                # get mouse position without any event
+                self.last_mouse_pos = pygame.mouse.get_pos()
+                self.last_mouse_pos = list(self.last_mouse_pos)
+                self.last_mouse_pos = [self.last_mouse_pos[0] / self.screen.get_size()[0] * self.display.get_size()[0],self.last_mouse_pos[1] / self.screen.get_size()[1] * self.display.get_size()[1]]
+                if self.card_health.check_mouse_collision(self.last_mouse_pos):
+                    self.card_health.select()
+                else:
+                    self.card_health.deselect()
+                # print(self.last_mouse_pos)
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.last_mouse_pos = pygame.mouse.get_pos()
-                    # self.last_mouse_pos = self.last_mouse_pos / self.display.get_size() * self.screen.get_size()
-                    # convert tuble to list
-                    self.last_mouse_pos = list(self.last_mouse_pos)
-                    # convert to surface position
-                    self.last_mouse_pos = [self.last_mouse_pos[0] / self.screen.get_size()[0] * self.display.get_size()[0],self.last_mouse_pos[1] / self.screen.get_size()[1] * self.display.get_size()[1]]
+                    if self.card_health.check_mouse_collision(self.last_mouse_pos):
+                        self.card_health.fly_out()
+                        self.scrore += 500
+                    # self.last_mouse_pos = pygame.mouse.get_pos()
+                    # # self.last_mouse_pos = self.last_mouse_pos / self.display.get_size() * self.screen.get_size()
+                    # # convert tuble to list
+                    # self.last_mouse_pos = list(self.last_mouse_pos)
+                    # # convert to surface position
+                    # self.last_mouse_pos = [self.last_mouse_pos[0] / self.screen.get_size()[0] * self.display.get_size()[0],self.last_mouse_pos[1] / self.screen.get_size()[1] * self.display.get_size()[1]]
                     hitted = False
                     if self.boss_manaer_s.enable:
                         for t_boss in self.boss_manaer_s.bosses:
@@ -173,21 +217,25 @@ class Game:
                                 # print(t_boss.health)
                                 self.scrore += self.my_hammer.dame
                                 self.hit_clip.play()
+    
                                 hitted = True
                                 break
                         
                     else:
                         for zombie in self.zombie_manager_s.zombies:
                             if zombie.check_mouse_collision(self.last_mouse_pos):
-                                # print(zombie.position)
+                                # Effect
                                 self.my_hammer.position = zombie.position
                                 self.my_hammer.enable = True
                                 self.hit_effect.position = zombie.position
                                 self.hit_effect.enable = True
+                                self.base.shake()
                                 zombie.enable = False
                                 # print("collision")
                                 self.scrore += 2
                                 self.hit_clip.play()
+                                self.kill_clip[random.randint(0,len(self.kill_clip)-2)].play()
+                                
                                 hitted = True
                                 break
                     if not hitted:
@@ -204,6 +252,7 @@ class Game:
                     # check if mouse position is over the button
                 # if event.type == pygame.MOUSEBUTTONUP:
                 #     self.last_mouse_pos = [0,0]
+            
             self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
 
             pygame.display.update()
@@ -211,6 +260,7 @@ class Game:
     def menu(self):
         self.scrore = 0
         self.timer = 0
+        self.boss_manaer_s.reset()
         while self.game_state == game_state.menu:
             self.display.blit(self.assets['background'], (0, 0))
             self.clouds.update()
