@@ -16,6 +16,12 @@
 https://github.com/truongghieu/ZombieKiller/assets/89084037/83482279-6605-47e8-a6c6-a73d24894c43
 
 
+Boss Effect and Card Bonus
+
+
+
+https://github.com/truongghieu/ZombieKiller/assets/89084037/26237f73-6c56-4ca5-bcb8-1a98f95d3da9
+
 
 
 ### TODO
