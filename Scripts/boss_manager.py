@@ -27,6 +27,8 @@ class boss_manager:
     def reset(self):
         for boss in self.bosses:
             boss.enable = False
-            boss.health = 100
+            self.boss_active = 0
+            for i in range(len(self.bosses)):
+                self.bosses[i].health = int( (i+1) * 20 )                
             # boss.position = boss.defaut_pos
             boss.image.reset()
