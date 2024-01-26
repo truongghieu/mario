@@ -36,7 +36,7 @@ class zombie_manager:
             return True
         return False
     def enable_random(self):
-        for i in range(self.zombie_count):
+        for i in range(min(self.zombie_count,len(self.zombies))):
             temp = random.randint(0,len(self.zombies)-1)
             self.zombies[temp].enable = True
             
