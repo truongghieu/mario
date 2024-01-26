@@ -12,8 +12,9 @@
 ## Demo
 <br>
 
+![card_bonus](https://github.com/truongghieu/ZombieKiller/assets/89084037/55260e5a-fd89-48c2-b058-992e29baab10)
 
-https://github.com/truongghieu/ZombieKiller/assets/89084037/83482279-6605-47e8-a6c6-a73d24894c43
+
 
 
 Boss Effect and Card Bonus
