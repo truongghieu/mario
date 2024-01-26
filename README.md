@@ -31,10 +31,10 @@ https://github.com/truongghieu/ZombieKiller/assets/89084037/26237f73-6c56-4ca5-b
 - [x] Mouse collider ( Click to kill zombie )
 - [x] Zombie ( Auto appear and timer) 
 - [x] Game Manager ( Game start , score , game over )
-- [ ] Canvas System ( Kill zombie and get score )
+- [x] Canvas System ( Kill zombie and get score )
 - [x] Sound System ( Play sound when kill zombie )
-- [ ] ( Bonus ) Skill System
-- [ ] ( Bonus ) Boss
+- [x] ( Bonus ) Skill System
+- [x] ( Bonus ) Boss
 
 ## Resources
 Collect the following resources:
