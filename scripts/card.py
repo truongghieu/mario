@@ -102,6 +102,7 @@ class card_score(card):
     def card_function(self):
         setattr(self.handle,"score",getattr(self.handle,"score") + 500)
         print(getattr(self.handle,"score"))
+        
 class card_damage(card):
     def card_function(self):
         setattr(self.handle.my_hammer,"dame",getattr(self.handle.my_hammer,"dame") + 1)

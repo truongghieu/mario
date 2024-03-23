@@ -1,8 +1,11 @@
 import pygame
 import json 
-
+from scripts.enemy import snake
 NEIGHBOR_OFFSETS = [(0,1),(1,0),(0,-1),(-1,0),(1,1),(-1,1),(1,-1),(-1,-1)]
 PHYSICS_TILES = {"base","stone"}
+ENEMY_TYPES = {"snake_spawn"}
+
+
 
 class Tilemap:
     def __init__(self, game,tile_size = 16):
@@ -10,6 +13,8 @@ class Tilemap:
         self.tile_size = tile_size
         self.tilemap = {}
         self.offgrid_tiles = []
+        self.spawned = False
+        self.editor_mode = False
 
         # for i in range(10):
         #     self.tilemap[str(3+i)+';5'] = {'type':'grass','variant':0,'pos':(3+i,5)}
@@ -22,14 +27,21 @@ class Tilemap:
                 if check_loc in self.tilemap:
                     tile = self.tilemap[check_loc]
                     surface.blit(self.game.assets[tile['type']][tile['variant']],(x*self.tile_size - offset[0],y*self.tile_size - offset[1]))
-        
-        
+                    
         # for loc in self.tilemap:
         #     tile = self.tilemap[loc]
         #     surface.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0]*self.tile_size - offset[0],tile['pos'][1]*self.tile_size - offset[1]))
 
         for tile in self.offgrid_tiles:
             surface.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0] - offset[0],tile['pos'][1] - offset[1]))
+            if tile['type'] in ENEMY_TYPES and not self.spawned and self.editor_mode == False:
+                if tile['type'] == 'snake_spawn':
+                    self.game.enemies.append(snake(self.game.assets['snake'],tile['pos']))
+        
+        self.spawned = True                
+        # enemy
+            
+
 
     def tile_around(self,pos):
         tiles = []

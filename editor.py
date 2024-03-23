@@ -38,12 +38,15 @@ class Editor:
             'base' : load_images('tiles/grass'),
             'decor' : load_images('tiles/decor'),
             'tree' : load_images('tiles/tree'),
+
+            # spawning place
+            'snake_spawn': load_images('entities/snake_spawn'),
             # player
-           
         
         }
+        self.enemies = []
         self.tilemap = Tilemap(self,tile_size=8)
-        
+        self.tilemap.editor_mode = True
         self.tile_list = list(self.assets)
         self.tile_group = 0
         self.tile_variant = 0

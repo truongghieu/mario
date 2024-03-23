@@ -39,6 +39,11 @@ class Animation:
             return self.images[index]
         return self.images[int(self.frame / self.img_duration)]
 
+    def img(self,flip = False):
+        if flip:
+            return pygame.transform.flip(self.images[int(self.frame / self.img_duration)],True,False)
+        return self.images[int(self.frame / self.img_duration)]
+
     def reset(self):
         self.frame = 0
         self.done = False

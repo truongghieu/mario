@@ -6,6 +6,7 @@ class Player(object):
         super().__init__(image,position)
         self.position = list(position)
         self.move_speed = 2
+        self.player_health = 3
         self.velocity = [0, 0]
         self.size = size
         self.colisions = {"up":False,"down":False,"left":False,"right":False}
@@ -15,6 +16,13 @@ class Player(object):
         self.animation = image
         self.flip = False
         self.jumps = 2
+        self.auto_shoot = False
+        self.shooting = False
+        self.shooting_cooldown = 6
+        self.shooting_cooldown_timer = self.shooting_cooldown 
+        self.running = False
+
+        self.shoot_pos = [self.position[0]+3,self.position[1] + 3]
     def rect(self):
         return pygame.Rect(self.position[0], self.position[1], self.size, self.size)
     
@@ -25,6 +33,13 @@ class Player(object):
             self.animation.reset()
 
     def update(self,movement=(0,0),tilemap=None):
+        self.shooting_cooldown_timer -= 1
+        if self.auto_shoot and self.shooting_cooldown_timer < 0:
+            self.shooting = True
+            self.shooting_cooldown_timer = self.shooting_cooldown
+        else:
+            self.shooting = False
+        self.shoot_pos = [self.position[0]+3,self.position[1] + 3]
         self.animation.update()
         self.colisions = {"up":False,"down":False,"left":False,"right":False}
         frame_movement = (movement[0] + self.velocity[0], movement[1] + self.velocity[1])
@@ -87,3 +102,12 @@ class Player(object):
         
     def render(self, display, offset=(0, 0)):
         display.blit(self.animation.img(), (self.position[0] - offset[0], self.position[1] - offset[1]))
+
+    def reset(self):
+        self.position = [50,50]
+        self.velocity = [0,0]
+        self.air_time = 0
+        self.jumps = 2
+        self.animation = self.root.assets["player_idle_right"].copy()
+        self.shooting_cooldown = 6
+        self.shooting_cooldown_timer = self.shooting_cooldown 
