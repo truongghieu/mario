@@ -35,7 +35,7 @@ class Game:
         pygame.init()
         pygame.display.set_caption('Zombie Killer')
         self.screen = pygame.display.set_mode((640, 480))
-        self.display = pygame.Surface((320, 240))
+        self.display = pygame.Surface((128, 96))
         self.clock = pygame.time.Clock()
         self.font_1 = generate_font('data/fonts/small_font.png',font_dat,5,8,(185,57,57))
         self.font_2 = generate_font('data/fonts/small_font.png',font_dat,5,8,(51,34,40))
@@ -57,17 +57,25 @@ class Game:
             'start_button': load_image('button/start.png'),
             'score_window' : load_image('score_window.png'),
             'clouds': load_images('clouds'),
+  
+            'base' : load_images('tiles/grass'),
             'decor' : load_images('tiles/decor'),
-            'stone' : load_images('tiles/stone'),
-            'grass' : load_images('tiles/grass'),
-            'player_idle' : Animation(load_images('entities/boss_0'),10,True),
+            'tree' : load_images('tiles/tree'),
+            # player
+            'player_idle_right' : Animation(load_images('player/idle_right'),10,True),
+            'player_idle_left' : Animation(load_images('player/idle_left'),10,True),
+            'player_run_right' : Animation(load_images('player/run_right'),10,True),
+            'player_run_left' : Animation(load_images('player/run_left'),10,True),
+            'player_jump_right' : Animation(load_images('player/jump_right'),13,True),
+            'player_jump_left' : Animation(load_images('player/jump_left'),13,True),
             'hit_effect' : Animation(load_images('particles/boom'),3,False),
             # Card
             'card_score' : load_image('cards/card_health.png'),
             'card_damage' : load_image('cards/card_damage.png'),
             'card_zombie' : load_image('cards/card_zombie.png'),
         }
-        self.tilemap = Tilemap(self,tile_size=16)
+        self.tilemap = Tilemap(self)
+        self.tilemap.load_file('map/level_1.json')
         self.game_state = game_state.menu
         self.game_logo = object(self.assets['logo'], (self.display.get_size()[0] / 2 - self.assets['logo'].get_width() / 2, 50))
         self.start_button = button(self.assets['start_button'], (self.display.get_size()[0] / 2 - self.assets['start_button'].get_width() / 2, 120), True)
@@ -75,7 +83,8 @@ class Game:
         
         
         
-        self.player = Player(self.assets['player_idle'],[100,100])
+        self.player = Player(self,self.assets['player_run_right'],[50,50],8)
+        # self.player.velocity = [0,2]
         # card and card manager
         # self.card_score = card_score(self.assets['card_score'],(100,250),self)
         # self.card_damage = card_damage(self.assets['card_damage'],(100,250),self)
@@ -88,7 +97,7 @@ class Game:
    
 
         # Decorations
-        self.clouds = Clouds(self.assets['clouds'], count=16)
+        self.clouds = Clouds(self.assets['clouds'], count=8)
         self.scroll = [0, 0]
         self.score_window = object(self.assets['score_window'], (0, 0))
         self.movement = [0,0]
@@ -107,33 +116,42 @@ class Game:
                 break
             self.timer += 1
 
-
-
-            self.display.blit(self.assets['background'], (0, 0))
+            # print(self.tilemap.physics_rects_around(self.player.position))
+            self.scroll[0] += (self.player.rect().centerx - self.display.get_size()[0] / 2 - self.scroll[0]) / 10
+            self.scroll[1] += (self.player.rect().centery - self.display.get_size()[1] / 2 - self.scroll[1]) / 10
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
+            self.display.blit(self.assets['background'], (0, 0))
             self.clouds.update()
             self.clouds.render(self.display, offset=render_scroll)
-            self.tilemap.render(self.display)
+            self.tilemap.render(self.display, offset=render_scroll)
 
-            self.player.update([self.movement[1] - self.movement[0],0])
+            self.player.update([self.movement[1] - self.movement[0],0],self.tilemap)
             self.player.render(self.display,offset=render_scroll)
 
             # show_text("Score : "+str(self.score) ,10,10 , 1,185,self.font_2,self.display)
-
-
-    
-
-            
-            
+            if self.movement == [0,0]:
+                self.player.image = self.assets['player_idle_right']
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.K_DOWN:
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
-                        self.movement[0] = 1
+                        self.player.image = self.assets['player_run_left']
+                        self.movement[0] = True
                     if event.key == pygame.K_RIGHT:
-                        self.movement[1] = 1
+                        self.player.image = self.assets['player_run_right']
+                        self.movement[1] = True
+
+                    if event.key == pygame.K_UP:
+                        self.player.jump()
+                  
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT:
+                        self.movement[0] = False
+                    if event.key == pygame.K_RIGHT:
+                        self.movement[1] = False
+                
 
 
 
@@ -171,4 +189,5 @@ class Game:
         self.game_state = state
 
 game = Game()
-game.menu()
+game.game_state = game_state.gameplay
+game.gameplay()
