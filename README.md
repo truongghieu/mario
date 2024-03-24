@@ -4,6 +4,15 @@ TIM Adventure is a full-fledged Python game featuring exciting gameplay, a dynam
 
 ## Features
 
+[demo gameplay]
+
+https://github.com/truongghieu/mario/assets/89084037/5e4c78d2-deb0-48f9-9377-2a3a1e9cbca3
+
+[demo editor]
+
+https://github.com/truongghieu/mario/assets/89084037/8a80f609-3b1c-49c1-81af-f57723667be9
+
+
 - **Gameplay**: Engage in thrilling adventures through various levels filled with challenges and obstacles.
 - **Menu**: Easily navigate through different game options with a user-friendly menu interface.
 - **Map Editor**: Unleash your creativity by designing custom maps and levels for the game.
@@ -35,4 +44,4 @@ TIM Adventure is a product of passion and dedication by our development team. Wh
 
 ---
 
-Feel free to enhance this README with installation instructions, usage guidelines, or any additional information pertinent to users and contributors. Happy gaming! 🎮
+ Happy gaming! 🎮
