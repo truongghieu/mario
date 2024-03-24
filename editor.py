@@ -40,8 +40,15 @@ class Editor:
             'tree' : load_images('tiles/tree'),
 
             # spawning place
-            'snake_spawn': load_images('entities/snake_spawn'),
+            'snake_spawn': load_images('entities/snake'),
             # player
+
+            # BONUS ITEM
+            
+            'player_upgrade_point' : load_images('item/player_upgrade_point'),
+            'bullet_upgrade_point' : load_images('item/bullet_upgrade_point'),
+            'gold' : load_images('item/gold'),
+            'next_level' : load_images('next_level'),
         
         }
         self.enemies = []
@@ -61,7 +68,7 @@ class Editor:
         # self.card_manager.add_card(self.card_damage)
         # self.card_manager.add_card(self.card_zombie)
 
-        self.map_file = "map/level_1.json"
+        self.map_file = "map/level_2.json"
 
         # Decorations
         self.scroll = [0, 0]
@@ -131,20 +138,25 @@ class Editor:
                         self.clicking = True
                         if not self.ongrid:
                             self.tilemap.offgrid_tiles.append({'type':self.tile_list[self.tile_group],'variant':self.tile_variant,'pos':(mpos[0] + render_scroll[0],mpos[1] + render_scroll[1])})
+                        print(len(self.tilemap.offgrid_tiles))
                     if event.button == 3:
                         self.right_clicking = True
                     if not self.shift:
                         if event.button == 4:
                             self.tile_variant = 0
-                            self.tile_group = (self.tile_group + 1) % len(self.tile_list)
+                            if len(self.assets[self.tile_list[self.tile_group]]) > 1:
+                                self.tile_group = (self.tile_group + 1) % len(self.tile_list)
                         if event.button == 5:
                             self.tile_variant = 0
-                            self.tile_group = (self.tile_group - 1) % len(self.tile_list)
+                            if len(self.assets[self.tile_list[self.tile_group]]) > 1:
+                                self.tile_group = (self.tile_group - 1) % len(self.tile_list)
                     else:
                         if event.button == 4:
-                            self.tile_variant = (self.tile_variant + 1) % len(self.assets[self.tile_list[self.tile_group]])
+                            if len(self.assets[self.tile_list[self.tile_group]]) > 1:
+                                self.tile_variant = (self.tile_variant + 1) % len(self.assets[self.tile_list[self.tile_group]])
                         if event.button == 5:
-                            self.tile_variant = (self.tile_variant - 1) % len(self.assets[self.tile_list[self.tile_group]])
+                            if len(self.assets[self.tile_list[self.tile_group]]) > 1:
+                                self.tile_variant = (self.tile_variant - 1) % len(self.assets[self.tile_list[self.tile_group]])
                 
                 
                 if event.type == pygame.MOUSEBUTTONUP:

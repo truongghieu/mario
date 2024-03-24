@@ -15,12 +15,15 @@ class Player(object):
         self.action = None
         self.animation = image
         self.flip = False
-        self.jumps = 2
+        self.jumps = 1
+        self.double_jump = False
         self.auto_shoot = False
         self.shooting = False
         self.shooting_cooldown = 6
         self.shooting_cooldown_timer = self.shooting_cooldown 
         self.running = False
+
+        self.level = 0
 
         self.shoot_pos = [self.position[0]+3,self.position[1] + 3]
     def rect(self):
@@ -74,7 +77,7 @@ class Player(object):
         self.air_time += 1
         if self.colisions["down"]:
             self.air_time = 0
-            self.jumps = 2
+            self.jumps = 2 if self.double_jump else 1
             # print(self.air_time)
         if self.air_time > 4:
             if self.flip:
@@ -107,7 +110,21 @@ class Player(object):
         self.position = [50,50]
         self.velocity = [0,0]
         self.air_time = 0
-        self.jumps = 2
+        self.jumps = 1
+        self.double_jump = False
         self.animation = self.root.assets["player_idle_right"].copy()
         self.shooting_cooldown = 6
         self.shooting_cooldown_timer = self.shooting_cooldown 
+
+    def upgrade(self):
+        self.level += 1
+        if self.level == 1:
+            self.double_jump = True
+        elif self.level == 2:
+            self.player_health += 1
+        elif self.level == 3:
+            self.shooting_cooldown = 4
+        elif self.level == 4:
+            self.shooting_cooldown = 2
+        elif self.level == 5:
+            self.shooting_cooldown = 1

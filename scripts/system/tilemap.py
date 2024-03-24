@@ -1,10 +1,13 @@
 import pygame
 import json 
 from scripts.enemy import snake
+from scripts.upgrade_bonus import gold,collectable_object_bullet_upgrade,collectable_object_player_upgrade,next_level
+
 NEIGHBOR_OFFSETS = [(0,1),(1,0),(0,-1),(-1,0),(1,1),(-1,1),(1,-1),(-1,-1)]
 PHYSICS_TILES = {"base","stone"}
 ENEMY_TYPES = {"snake_spawn"}
-
+COLECTABLE_TYPES = {"gold","player_upgrade_point","bullet_upgrade_point"}
+NEXT_LEVEL_TYPES = {"next_level"}
 
 
 class Tilemap:
@@ -33,11 +36,35 @@ class Tilemap:
         #     surface.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0]*self.tile_size - offset[0],tile['pos'][1]*self.tile_size - offset[1]))
 
         for tile in self.offgrid_tiles:
-            surface.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0] - offset[0],tile['pos'][1] - offset[1]))
-            if tile['type'] in ENEMY_TYPES and not self.spawned and self.editor_mode == False:
-                if tile['type'] == 'snake_spawn':
-                    self.game.enemies.append(snake(self.game.assets['snake'],tile['pos']))
-        
+            # if tile['type'] in ENEMY_TYPES and not self.spawned and self.editor_mode == False:
+            #     if tile['type'] == 'snake_spawn':
+            #         self.game.enemies.append(snake(self.game.assets['snake'],tile['pos']))
+            # elif tile["type"] in COLECTABLE_TYPES and not self.spawned and self.editor_mode == False:
+            #     if tile['type'] == 'gold':
+            #         self.game.collectible_items.append(gold(self.game.assets['gold'],[tile['pos'][0],tile['pos'][1]]))
+            #     if tile['type'] == 'bullet_upgrade_point':
+            #         self.game.collectible_items.append(collectable_object_bullet_upgrade(self.game.assets['bullet_upgrade_point'],tile['pos']))
+            #     if tile['type'] == 'player_upgrade_point':
+            #         self.game.collectible_items.append(collectable_object_player_upgrade(self.game.assets['player_upgrade_point'],tile['pos']))
+            if self.editor_mode == False:
+                if self.spawned == False:
+                    if tile['type'] in ENEMY_TYPES:
+                        if tile['type'] == 'snake_spawn':
+                            self.game.enemies.append(snake(self.game.assets['snake'],tile['pos']))
+                    elif tile["type"] in COLECTABLE_TYPES:
+                        if tile['type'] == 'gold':
+                            self.game.collectible_items.append(gold(self.game.assets['gold'],tile['pos']))
+                        if tile['type'] == 'bullet_upgrade_point':
+                            self.game.collectible_items.append(collectable_object_bullet_upgrade(self.game.assets['bullet_upgrade_point'],tile['pos']))
+                        if tile['type'] == 'player_upgrade_point':
+                            self.game.collectible_items.append(collectable_object_player_upgrade(self.game.assets['player_upgrade_point'],tile['pos']))
+                    elif tile["type"] in NEXT_LEVEL_TYPES:
+                        if tile['type'] == 'next_level':
+                            self.game.collectible_items.append(next_level(self.game.assets['next_level'],tile['pos']))
+                if tile['type'] not in ENEMY_TYPES and tile['type'] not in COLECTABLE_TYPES and tile['type'] not in NEXT_LEVEL_TYPES:
+                    surface.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0] - offset[0],tile['pos'][1] - offset[1]))
+            else:
+                surface.blit(self.game.assets[tile['type']][tile['variant']],(tile['pos'][0] - offset[0],tile['pos'][1]- offset[1]))
         self.spawned = True                
         # enemy
             
@@ -66,6 +93,7 @@ class Tilemap:
         f.close()
 
     def load_file(self,path):
+        self.spawned = False
         f = open(path,'r')
         data = json.load(f)
         self.tilemap = data['tilemap']
