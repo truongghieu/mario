@@ -2,7 +2,7 @@ from scripts.system.entities import object
 import pygame
 import math
 
-class card_manager:
+ card_manager:
     def __init__(self,display,enable = False):
         self.cards = []
         self.display = display

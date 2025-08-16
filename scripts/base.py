@@ -23,4 +23,6 @@ class base(object):
     def shake(self,strenght = 1):
         self.strenght = strenght
         self.shake_done = False
-        
+           
+
+

@@ -21,6 +21,7 @@ from scripts.player import Player
 from scripts.bullet import bullet
 from scripts.upgrade_bonus import collectable_object_bullet_upgrade,collectable_object_player_upgrade
 
+
 from scripts.panel import panel,option,about
 # Enemy
 from scripts.particle import particle,running_effect
@@ -174,7 +175,6 @@ class Game:
             self.tilemap.render(self.display, offset=render_scroll)
             self.player.update([self.movement[1] - self.movement[0],0],self.tilemap)
             self.player.render(self.display,offset=render_scroll)
-            
             # EFFECTS
             if self.player.running:
                 if self.player.flip:

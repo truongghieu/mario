@@ -26,10 +26,11 @@ class animate_object(object):
 
 
 class particle(object):
-    def __init__(self, image, position,quantity = 10,enabled = False):
+    def __init__(self, image, position,quantity = 10,speed = 1,enabled = False):
         super().__init__(image, position)
         self.enabled = enabled
         self.quantity = quantity
+        self.speed = speed
         self.particles = []
         for i in range(self.quantity):
             self.particles.append(animate_object(self.image, self.position))
@@ -39,7 +40,7 @@ class particle(object):
             for particle in self.particles:
                 particle.image.reset()
                 particle.position = self.position
-                particle.dir = [float(random.randint(-5,5))/10,float(random.randint(-5,5))/10]
+                particle.dir = [float(random.randint(-5,5))/10 * self.speed,float(random.randint(-5,5))/10 * self.speed]
                 particle.enabled = True
             self.enabled = False
         for particle in self.particles:
