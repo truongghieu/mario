@@ -4,5 +4,10 @@ SCALE = 3
 SCREEN_DIMENSIONS = (1200, 900)
 
 
+PLAYER_SPEED = 2
+PLAYER_HEALTH = 3
+
+
+
 
 BASE_IMG_PATH = 'data/images/'

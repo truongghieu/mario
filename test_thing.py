@@ -3,8 +3,6 @@ import sys
 import pygame
 import random
 import os
-
-# Config
 from CONFIG import *
 
 # System 
@@ -16,10 +14,11 @@ from scripts.system.enum import game_state
 from scripts.system.tilemap import Tilemap
 
 # Object
-from scripts.clouds import Clouds,Cloud
+from scripts.clouds import Clouds
 from scripts.button import button
 from scripts.effect import effect
 from scripts.player import Player 
+from scripts.player_topdown import topdown_player
 from scripts.bullet import bullet
 from scripts.upgrade_bonus import collectable_object_bullet_upgrade,collectable_object_player_upgrade
 
@@ -34,61 +33,118 @@ font_dat = {'A':[3],'B':[3],'C':[3],'D':[3],'E':[3],'F':[3],'G':[3],'H':[3],'I':
           '0':[3],'1':[3],'2':[3],'3':[3],'4':[3],'5':[3],'6':[3],'7':[3],'8':[3],'9':[3],
           '(':[2],')':[2],'/':[3],'_':[5],'=':[3],'\\':[3],'[':[2],']':[2],'*':[3],'"':[3],'<':[3],'>':[3],';':[1]}
 
-
-
 class Game:
     def __init__(self):
+        # cc
+        # set up for pygame
         pygame.init()
-        pygame.display.set_caption('Test particles')
-        # screen
+        pygame.display.set_caption('TIM Adventure')
         self.screen = pygame.display.set_mode(SCREEN_DIMENSIONS)
         self.display = pygame.Surface(DISPLAY_DIMENSIONS)
         self.clock = pygame.time.Clock()
+        self.font_1 = generate_font('data/fonts/small_font.png',font_dat,5,8,(185,57,57))
+        self.font_2 = generate_font('data/fonts/small_font.png',font_dat,5,8,(51,34,40))
+        # Variables
+        # ______________SOUND___________________
+        self.last_mouse_pos = [0, 0]
+        self.timer = 0
+        self.score = 0
+        self.kill_clip = []
+        self.time_effect_active_boss = 0 
+        self.scroll = [0, 0]
+        self.movement = [0, 0]
+        for i in range(2,19):
+            self.kill_clip.append(load_kill(str(i)))
+        self.assets = {
+            'logo': load_image('logo.png'),
+            'background': load_image('background.png'),
+            'start_button': load_image('button/start.png'),
+            'options_button': load_image('button/option.png'),
+            'about_button': load_image('button/about.png'),
+            'exit_button': load_image('button/exit.png'),
+            'panel' : load_image('panel.png'),
+            'about_panel' : load_image('about.png'),
+            'heart': load_image('ui/heart.png'),
+            'clouds': load_images('clouds'),
+
+            'grass' : load_images('tiles/grass'),
+            'decor' : load_images('tiles/decor'),
+            'tree' : load_images('tiles/tree'),
+            'snake_spawn' : load_images('entities/snake_spawn'),
+            # PLAYER ANIMATIONS
+            'player_idle_right' : Animation(load_images('player/idle_right'),10,True),
+            'player_idle_left' : Animation(load_images('player/idle_left'),10,True),
+            'player_run_right' : Animation(load_images('player/run_right'),10,True),
+            'player_run_left' : Animation(load_images('player/run_left'),10,True),
+            'player_jump_right' : Animation(load_images('player/jump_right'),13,True),
+            'player_jump_left' : Animation(load_images('player/jump_left'),13,True),
+            'hit_effect' : Animation(load_images('particles/boom'),3,False),
+            'bullet' : load_image('bullet.png'),
+            # PARTICLES
+            'bullet_particle' : Animation(load_images('particles/particle'),10,False),
+            'running_effect' : Animation(load_images('particles/smoke_particle'),5,False),
+     
+            # ENEMIES
+            'snake' : Animation(load_images('entities/snake'),10,True),
+            'snake_spawn' : load_images('entities/snake'),
+    
+            # BONUS ITEM
+            
+            'player_upgrade_point' : load_images('item/player_upgrade_point'),
+            'bullet_upgrade_point' : load_images('item/bullet_upgrade_point'),
+            'gold' : load_images('item/gold'),
+            # NEXT LEVEL POINT
+            'next_level' : load_images('next_level')
+
+        }
+
         
-        self.data = {
-            'logo':load_image('logo.png'),          
-            'clouds' : load_images('clouds'),
-            'test_particle' : Animation(load_images('particles/smoke_particle'), 5, True)
-            }
+        self.tilemap = Tilemap(self)
+        self.clouds = Clouds(self.assets['clouds'], count=8)
+        self.player = topdown_player(self.assets['player_idle_right'],( (DISPLAY_DIMENSIONS[0]//2), (DISPLAY_DIMENSIONS[1]//2)))
 
-        #self.clouds = Cloud((0,100) , self.data['clouds'][0],random.random()*2+0.5,0.5)
-        self.clouds = Clouds(self.data['clouds'])
-        self.particle = particle(self.data['test_particle'],(DISPLAY_DIMENSIONS[0]//2,DISPLAY_DIMENSIONS[1]//2),enabled = True,quantity = 30,speed = 5)
-        self.scroll = (0,0)
     def gameplay(self):
+        # this is for starting setup for gameplay
         while True:
-            self.display.fill((0,0,0))
-
-            # self.display.blit(self.data['logo'], (0, 0))
-            
-            # Update your object here
-            #self.clouds.update()
-            self.particle.update()
-            #if self.particle.enabled == False:
-            #    self.particle.enabled = True
-            
-            # render your object here
-            # self.clouds.render(self.display, offset=self.scroll)
-            self.particle.render(self.display, offset=self.scroll)
-
-            # try to update scroll
-            # self.scroll = (self.scroll[0] + random.randint(-2,5), self.scroll[1] + random.randint(-2,5))
-            #show_text("Tim Adventure",10,2 , 1,185,self.font_2,self.display)
-            events = pygame.event.get()
-            for event in events:
+            #print(self.scroll)
+            self.display.blit(pygame.transform.scale(self.assets['background'], DISPLAY_DIMENSIONS), (0, 0))
+            # ----------------- GAMEPLAY -----------------
+            self.clouds.update()
+            # ----------------- UPDATE Part -----------------
+            # Update this for player scroll will depend on player posistion
+            render_scroll = self.scroll
+            self.player.update()
+            # ----------------- RENDER Part -----------------
+            self.tilemap.render(self.display,offset=(0,0))
+            self.clouds.render(self.display, offset=render_scroll)
+            self.player.render(self.display, offset=render_scroll)
+            # self.game_logo = object(self.assets['logo'], (self.display.get_size()[0] / 2 - self.assets['logo'].get_width() / 2, 2))
+            # components in UI  
+            for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    pygame.quit()
                     sys.exit()
+                # ESC
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        pygame.quit()
                         sys.exit()
-                    if event.key == pygame.K_SPACE:
-                        self.particle.enabled = not self.particle.enabled
-            self.clock.tick(60)
-            self.screen.blit(pygame.transform.scale(self.display, SCREEN_DIMENSIONS), (0, 0))
+                # MOVEMENT
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        self.movement[0] = True
+                        self.scroll[0] += 5
+                    if event.key == pygame.K_RIGHT:
+                        #self.player.image = self.assets['player_run_right']
+                        self.movement[1] = True
+                        #self.player.running = True
+                        self.scroll[0] -= 5
+
+            self.screen.blit(pygame.transform.scale(self.display, self.screen.get_size()), (0, 0))
             pygame.display.update()
-
-
+            self.clock.tick(60)
 
 
 game = Game()
 game.gameplay()
+

@@ -18,11 +18,12 @@ class Tilemap:
         self.offgrid_tiles = []
         self.spawned = False
         self.editor_mode = False
+        startx = 5
+        starty = 5
+        for i in range(10):
+            self.tilemap[str(startx+i)+f';{starty}'] = {'type':'grass','variant':1,'pos':(startx+i,5)}
 
-        # for i in range(10):
-        #     self.tilemap[str(3+i)+';5'] = {'type':'grass','variant':0,'pos':(3+i,5)}
-        #     self.tilemap['10;'+str(2+i)] = {'type':'stone','variant':0,'pos':(10,2+i)}
-
+        print(self.tilemap)
     def render(self,surface,offset=(0,0)):
         for x in range(offset[0]//self.tile_size,(offset[0]+surface.get_width())//self.tile_size+1):
             for y in range(offset[1]//self.tile_size,(offset[1]+surface.get_height())//self.tile_size+1):
