@@ -1,47 +1,114 @@
-# TIM Adventure
+# TIM Adventure - Mario-like Game
 
-TIM Adventure is a full-fledged Python game featuring exciting gameplay, a dynamic menu, and a map editor for endless fun and creativity.
+TIM Adventure is a full-fledged Python game featuring exciting gameplay, a dynamic menu system, and an integrated map editor for endless creativity.
+
+![Game Screenshot](img_show/0.png)
+![Editor Screenshot](img_show/1.png)
 
 ## Features
 
-[demo gameplay]
+- **Platformer Gameplay**: Classic Mario-style platforming with enemies, power-ups, and bosses
+- **Map Editor**: Create and customize game levels with visual editor
+- **Particle Effects**: Dynamic visual effects for attacks and environmental interactions
+- **Multiple Levels**: Progressive difficulty with unique boss battles
+- **Sound System**: Background music and sound effects
+- **Upgrade System**: Collect items to enhance player abilities
 
+### Gameplay Demo
 https://github.com/truongghieu/mario/assets/89084037/5e4c78d2-deb0-48f9-9377-2a3a1e9cbca3
 
-[demo editor]
-
+### Editor Demo
 https://github.com/truongghieu/mario/assets/89084037/8a80f609-3b1c-49c1-81af-f57723667be9
 
+## Installation
 
-- **Gameplay**: Engage in thrilling adventures through various levels filled with challenges and obstacles.
-- **Menu**: Easily navigate through different game options with a user-friendly menu interface.
-- **Map Editor**: Unleash your creativity by designing custom maps and levels for the game.
+1. Clone the repository:
+```bash
+git clone https://github.com/truongghieu/mario.git
+cd mario
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Running the Game
+
+To start the game:
+```bash
+python game.py
+```
+
+To start the map editor:
+```bash
+python editor.py
+```
+
+## Controls
+
+### Game Controls
+- **Arrow Keys**: Move character
+- **Space**: Jump
+- **Z**: Attack/Shoot
+- **X**: Special ability
+- **P**: Pause game
+
+### Editor Controls
+- **Left Click**: Place tiles
+- **Right Click**: Remove tiles
+- **Number Keys**: Select tile type
+- **S**: Save map
+- **L**: Load map
+
+## Project Structure
+
+```
+mario/
+├── data/               # Game assets (sounds, images, fonts)
+├── img_show/           # Screenshots and demo videos
+├── map/                # Game level files
+├── scripts/            # Game source code
+│   ├── boss/           # Boss enemy implementations
+│   ├── system/         # Core systems (entities, tilemap, utils)
+│   ├── base.py         # Base game class
+│   ├── bullet.py       # Projectile system
+│   ├── enemy.py        # Enemy behaviors
+│   ├── game.py         # Main game entry point
+│   ├── editor.py       # Map editor
+│   └── player.py       # Player controller
+├── requirements.txt    # Python dependencies
+└── README.md           # This document
+```
+
+## Dependencies
+
+- Python 3.7+
+- Pygame
+- PyTMX (for tilemap loading)
+
+Full list in [requirements.txt](requirements.txt)
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## Acknowledgements
 
-We extend our gratitude to the following contributors and sources:
-
-- **VEXED Free Asset**: Special thanks to [VEXED Free Asset](https://v3x3d.itch.io/paper-pixels) for providing assets that enhance the visual appeal of the game.
-
-## Preferences
-
-For additional resources and preferences, refer to the following:
-
-- **Slider**: Learn more about sliders through this informative [YouTube video](https://www.youtube.com/watch?v=n_ijgqYmXS0).
-- **Project Core**: Explore the core concepts of the project by watching this [YouTube video](https://www.youtube.com/watch?v=2gABYM5M0ww&t=15115s).
-
-## Usage
-
-To get started with TIM Adventure, simply clone the repository and follow the instructions provided in the README.
+- **VEXED Free Asset**: [Paper Pixel assets](https://v3x3d.itch.io/paper-pixels)
+- **Slider Implementation**: [YouTube tutorial](https://www.youtube.com/watch?v=n_ijgqYmXS0)
+- **Game Development Core**: [YouTube series](https://www.youtube.com/watch?v=2gABYM5M0ww&t=15115s)
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
 
-## Disclaimer
-
-TIM Adventure is a product of passion and dedication by our development team. While we strive for excellence, please note that this project may contain bugs or issues. Your feedback and contributions are highly appreciated to improve the overall experience.
-
 ---
 
- Happy gaming! 🎮
+Happy gaming! 🎮
